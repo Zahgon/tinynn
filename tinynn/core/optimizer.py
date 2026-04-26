@@ -11,16 +11,10 @@ class Optimizer:
 
     def step(self, grads, params):
         # compute the gradient step
-        grads = self.compute_step(grads)
-        # apply weight_decay if specified
-        if self.weight_decay:
-            grads -= self.lr * self.weight_decay * params
-        # take a step
-        params += grads
+        pass
 
     def compute_step(self, grads):
-        grads.values = self._compute_step(grads.values)
-        return grads
+        pass
 
     def _compute_step(self, grads):
         raise NotImplementedError
@@ -32,7 +26,7 @@ class SGD(Optimizer):
         super().__init__(lr, weight_decay)
 
     def _compute_step(self, grads):
-        return -self.lr * grads
+        pass
 
 
 class Adam(Optimizer):
@@ -53,17 +47,7 @@ class Adam(Optimizer):
         self._v = 0
 
     def _compute_step(self, grads):
-        self._t += 1
-
-        self._m += (1.0 - self._b1) * (grads - self._m)
-        self._v += (1.0 - self._b2) * (grads ** 2 - self._v)
-
-        # bias correction
-        _m = self._m / (1 - self._b1 ** self._t)
-        _v = self._v / (1 - self._b2 ** self._t)
-
-        step = -self.lr * _m / (_v ** 0.5 + self._epsilon)
-        return step
+        pass
 
 
 class RAdam(Optimizer):
@@ -86,23 +70,7 @@ class RAdam(Optimizer):
         self.rho = 2.0 / (1 - self._b2) - 1.0
 
     def _compute_step(self, grads):
-        self._t += 1
-
-        self._m += (1.0 - self._b1) * (grads - self._m)
-        self._v += (1.0 - self._b2) * (grads ** 2 - self._v)
-
-        # bias correction
-        _m = self._m / (1 - self._b1 ** self._t)
-
-        _rho = self.rho - 2 * self._b2 ** self._t / (1 - self._b2 ** self._t)
-        if _rho > 4.0:
-            _v = self._v / (1 - self._b2 ** self._t)
-            _r = (((_rho - 4) * (_rho - 2) * self.rho) / \
-                    ((self.rho - 4) * (self.rho - 2) * _rho)) ** 0.5
-            step = -self.lr * _m * _r / (_v ** 0.5 + self._epsilon)
-        else:
-            step = -self.lr * _m
-        return step
+        pass
 
 
 class RMSProp(Optimizer):
@@ -125,11 +93,7 @@ class RMSProp(Optimizer):
         self._mom = 0
 
     def _compute_step(self, grads):
-        self._rms += (1 - self._rho) * (grads ** 2 - self._rms)
-        self._mom = self._momentum * self._mom + self.lr * grads / \
-                (self._rms + self._epsilon) ** 0.5
-        step = -self._mom
-        return step
+        pass
 
 
 class Momentum(Optimizer):
@@ -142,9 +106,7 @@ class Momentum(Optimizer):
         self._acc = 0
 
     def _compute_step(self, grads):
-        self._acc = self._momentum * self._acc + grads
-        step = -self.lr * self._acc
-        return step
+        pass
 
 
 class Adagrad(Optimizer):
@@ -159,10 +121,7 @@ class Adagrad(Optimizer):
         self._epsilon = epsilon
 
     def _compute_step(self, grads):
-        self._g += grads ** 2
-        adjust_lr = self.lr / (self._g + self._epsilon) ** 0.5
-        step = -adjust_lr * grads
-        return step
+        pass
 
 
 class Adadelta(Optimizer):
@@ -175,12 +134,7 @@ class Adadelta(Optimizer):
         self._delta = 0  # running average of delta
 
     def _compute_step(self, grads):
-        self._rms += (1 - self._rho) * (grads ** 2 - self._rms)
-        std = (self._delta + self._epsilon) ** 0.5
-        delta = grads * (std / (self._rms + self._epsilon) ** 0.5)
-        step = - self.lr * delta
-        self._delta += (1 - self._rho) * (delta ** 2 - self._delta)
-        return step
+        pass
 
 
 class BaseScheduler:
@@ -194,16 +148,14 @@ class BaseScheduler:
         self._t = 0
 
     def step(self):
-        self._t += 1
-        self._optimizer.lr = self._compute_lr()
-        return self.curr_lr
+        pass
 
     def _compute_lr(self):
         raise NotImplementedError
 
     @property
     def curr_lr(self):
-        return self._optimizer.lr
+        pass
 
 
 class StepLR(BaseScheduler):
@@ -218,8 +170,7 @@ class StepLR(BaseScheduler):
         self._gamma = gamma
 
     def _compute_lr(self):
-        decay = self._gamma if self._t % self._step_size == 0 else 1.0
-        return decay * self.curr_lr
+        pass
 
 
 class MultiStepLR(BaseScheduler):
@@ -237,8 +188,7 @@ class MultiStepLR(BaseScheduler):
         self._gamma = gamma
 
     def _compute_lr(self):
-        decay = self._gamma if self._t in self._milestones else 1.0
-        return decay * self.curr_lr
+        pass
 
 
 class ExponentialLR(BaseScheduler):
@@ -254,10 +204,7 @@ class ExponentialLR(BaseScheduler):
         self._decay_rate = decay_rate
 
     def _compute_lr(self):
-        if self._t <= self._decay_steps:
-            decay = self._decay_rate ** (self._t / self._decay_steps)
-            return self._init_lr * decay
-        return self.curr_lr
+        pass
 
 
 class LinearLR(BaseScheduler):
@@ -279,10 +226,7 @@ class LinearLR(BaseScheduler):
         self._start_step = start_step
 
     def _compute_lr(self):
-        if self._t > self._start_step:
-            if self._t <= self._start_step + self._decay_steps:
-                return self.curr_lr + self._lr_delta
-        return self.curr_lr
+        pass
 
 
 class CyclicalLR(BaseScheduler):
@@ -306,16 +250,4 @@ class CyclicalLR(BaseScheduler):
         self._cycling_start_t = None
 
     def _compute_lr(self):
-        if self.curr_lr > self._max_lr:
-            return self.curr_lr - self._abs_lr_delta
-        if self.curr_lr < self._min_lr:
-            return self.curr_lr + self._abs_lr_delta
-
-        if not self._is_cycling:
-            self._is_cycling = True
-            self._cycling_start_t = self._t
-
-        if ((self._t - self._cycling_start_t) % self._cyclical_steps <
-                self._cyclical_steps // 2):
-            return self.curr_lr + self._abs_lr_delta
-        return self.curr_lr - self._abs_lr_delta
+        pass

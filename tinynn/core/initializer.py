@@ -4,9 +4,7 @@ import numpy as np
 
 
 def get_fans(shape):
-    fan_in = shape[0] if len(shape) == 2 else np.prod(shape[1:])
-    fan_out = shape[1] if len(shape) == 2 else shape[0]
-    return fan_in, fan_out
+    pass
 
 
 class Initializer:
@@ -25,7 +23,7 @@ class Normal(Initializer):
         self._std = std
 
     def init(self, shape):
-        return np.random.normal(loc=self._mean, scale=self._std, size=shape)
+        pass
 
 
 class TruncatedNormal(Initializer):
@@ -35,14 +33,7 @@ class TruncatedNormal(Initializer):
         self._low, self._high = low, high
 
     def init(self, shape):
-        data = np.random.normal(loc=self._mean, scale=self._std, size=shape)
-        while True:
-            mask = (data > self._low) & (data < self._high)
-            if mask.all():
-                break
-            data[~mask] = np.random.normal(loc=self._mean, scale=self._std,
-                                           size=(~mask).sum())
-        return data
+        pass
 
 
 class Uniform(Initializer):
@@ -52,7 +43,7 @@ class Uniform(Initializer):
         self._b = b
 
     def init(self, shape):
-        return np.random.uniform(low=self._a, high=self._b, size=shape)
+        pass
 
 
 class Constant(Initializer):
@@ -61,7 +52,7 @@ class Constant(Initializer):
         self._val = val
 
     def init(self, shape):
-        return np.full(shape=shape, fill_value=self._val)
+        pass
 
 
 class Zeros(Constant):
@@ -91,9 +82,7 @@ class XavierUniform(Initializer):
         self._gain = gain
 
     def init(self, shape):
-        fan_in, fan_out = get_fans(shape)
-        a = self._gain * np.sqrt(6.0 / (fan_in + fan_out))
-        return np.random.uniform(low=-a, high=a, size=shape)
+        pass
 
 
 class XavierNormal(Initializer):
@@ -110,9 +99,7 @@ class XavierNormal(Initializer):
         self._gain = gain
 
     def init(self, shape):
-        fan_in, fan_out = get_fans(shape)
-        std = self._gain * np.sqrt(2.0 / (fan_in + fan_out))
-        return np.random.normal(loc=0.0, scale=std, size=shape)
+        pass
 
 
 class HeUniform(Initializer):
@@ -129,9 +116,7 @@ class HeUniform(Initializer):
         self._gain = gain
 
     def init(self, shape):
-        fan_in, _ = get_fans(shape)
-        a = self._gain * np.sqrt(6.0 / fan_in)
-        return np.random.uniform(low=-a, high=a, size=shape)
+        pass
 
 
 class HeNormal(Initializer):
@@ -148,6 +133,4 @@ class HeNormal(Initializer):
         self._gain = gain
 
     def init(self, shape):
-        fan_in, _ = get_fans(shape)
-        std = self._gain * np.sqrt(2.0 / fan_in)
-        return np.random.normal(loc=0.0, scale=std, size=shape)
+        pass

@@ -11,34 +11,24 @@ class Model:
         self.optimizer = optimizer
 
     def forward(self, inputs):
-        return self.net.forward(inputs)
+        pass
 
     def backward(self, predictions, targets):
-        loss = self.loss.loss(predictions, targets)
-        grad_from_loss = self.loss.grad(predictions, targets)
-        struct_grad = self.net.backward(grad_from_loss)
-        return loss, struct_grad
+        pass
 
     def apply_grads(self, grads):
-        params = self.net.params
-        self.optimizer.step(grads, params)
+        pass
 
     def save(self, path):
-        with open(path, "wb") as f:
-            pickle.dump(self.net.params, f)
+        pass
 
     def load(self, path):
-        with open(path, "rb") as f:
-            params = pickle.load(f)
-
-        self.net.params = params
-        for layer in self.net.layers:
-            layer.is_init = True
+        pass
 
     @property
     def is_training(self):
-        return self.net.is_training
+        pass
 
     @is_training.setter
     def is_training(self, is_training):
-        self.net.is_training = is_training
+        pass

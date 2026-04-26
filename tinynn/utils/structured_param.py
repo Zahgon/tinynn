@@ -12,50 +12,30 @@ class StructuredParam:
 
     @property
     def values(self):
-        return np.array([v for p in self.param_list for v in p.values()],
-                        dtype=object)
+        pass
 
     @values.setter
     def values(self, values):
-        i = 0
-        for param in self.param_list:
-            for name in param.keys():
-                param[name] = values[i]
-                i += 1
+        pass
 
     @property
     def nt_values(self):
-        return np.array([v for p in self.nt_param_list for v in p.values()])
+        pass
 
     @nt_values.setter
     def nt_values(self, values):
-        i = 0
-        for param in self.nt_param_list:
-            for name in param.keys():
-                param[name] = values[i]
-                i += 1
+        pass
 
     @property
     def shape(self):
-        shape = list()
-        for param in self.param_list:
-            l_shape = dict()
-            for key, val in param.items():
-                l_shape[key] = val.shape
-            shape.append(l_shape)
-        shape = tuple(shape)
-        return shape
+        pass
 
     @staticmethod
     def _ensure_values(obj):
-        if isinstance(obj, StructuredParam):
-            obj = obj.values
-        return obj
+        pass
 
     def clip(self, min_=None, max_=None):
-        obj = copy.deepcopy(self)
-        obj.values = [v.clip(min_, max_) for v in self.values]
-        return obj
+        pass
 
     def __add__(self, other):
         obj = copy.deepcopy(self)
